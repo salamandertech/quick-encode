@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="quick-encode" default="build">
+
+    <property name="source.dir" value="src"/>
+    <property name="build.dir" value="bin"/>
+    <property name="class.dir" value="${build.dir}/classes"/>
+    <property name="pkgroot" value="com.github.mlmoses.qencode"/>
+    <property name="jarname" value="${build.dir}/quick-encode.jar"/>
+    <property name="zxing.dir" value="../sti/zxing"/>
+
+    <target name="build" depends="compile" description="Build an executable jar file for the application.">
+        <jar destfile="${jarname}" index="true" indexMetaInf="true" level="9">
+            <fileset dir="${class.dir}">
+                <include name="**/*.class"/>
+            </fileset>
+            <manifest>
+                <attribute name="Main-Class" value="${pkgroot}.Main"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="compile" depends="compile-zxing" description="Compile the source to class files.">
+        <javac srcdir="${source.dir}" destdir="${class.dir}" includeAntRuntime="false" source="1.7" target="1.7">
+            <include name="**/*.java"/>
+        </javac>
+    </target>
+
+    <target name="compile-zxing" depends="init" description="Compile just the Zebra Crossing source files.">
+        <javac srcdir="${zxing.dir}" destdir="${class.dir}" includeAntRuntime="false" source="1.7" target="1.7">
+            <include name="core/src/**/*.java"/>
+            <include name="javase/src/**/MatrixToImage*.java"/>
+        </javac>
+    </target>
+
+    <target name="init" description="Initialize the build environment.">
+        <mkdir dir="${build.dir}"/>
+        <mkdir dir="${class.dir}"/>
+    </target>
+
+    <target name="clean" description="Remove all generated content.">
+        <delete dir="${class.dir}"/>
+        <delete dir="${build.dir}"/>
+    </target>
+
+</project>
