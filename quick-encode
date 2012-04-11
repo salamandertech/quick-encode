@@ -1,3 +1,4 @@
 #! /bin/sh
 
-java -jar bin/quick-encode.jar $*
+QUICK_ENCODE="$(cd "$(dirname "$0")" && pwd)/bin/quick-encode.jar"
+java -jar "$QUICK_ENCODE" $*
