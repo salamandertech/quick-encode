@@ -1,4 +1,0 @@
-#! /bin/sh
-
-QUICK_ENCODE="$(dirname "$(readlink -m "$0")")/bin/quick-encode.jar"
-java -jar "$QUICK_ENCODE" $*
