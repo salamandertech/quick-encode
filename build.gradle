@@ -12,3 +12,11 @@ repositories {
 dependencies {
     compile group: 'com.google.zxing', name: 'javase', version: '2.2'
 }
+
+jar {
+    manifest {
+        def runDeps = configurations.runtime.collect { it.name }.join(' ')
+        attributes 'Main-Class': mainClassName,
+                   'Class-Path': runDeps
+    }
+}
