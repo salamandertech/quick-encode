@@ -10,7 +10,7 @@ repositories {
 }
 
 dependencies {
-    compile group: 'com.google.zxing', name: 'javase', version: '2.2'
+    compile group: 'com.google.zxing', name: 'javase', version: '3.0.+'
 }
 
 jar {
