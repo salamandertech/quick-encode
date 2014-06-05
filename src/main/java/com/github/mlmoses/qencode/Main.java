@@ -47,7 +47,7 @@ public final class Main {
             }
 
             try {
-                MatrixToImageWriter.writeToFile(m, "png", pathOut.toFile());
+                MatrixToImageWriter.writeToPath(m, "png", pathOut);
             } catch (IOException e) {
                 System.out.printf("Could not write \"%s\".\n", pathOut);
             }
