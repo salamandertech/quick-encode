@@ -1,7 +1,9 @@
 apply plugin: 'java'
 apply plugin: 'application'
 
-mainClassName = 'com.github.mlmoses.qencode.Main'
+ext.mainPackageName = 'org.bitbucket.mlmoses.qencode'
+
+mainClassName = ext.mainPackageName + '.Main'
 sourceCompatibility = 1.7
 version = '0.1.0'
 
