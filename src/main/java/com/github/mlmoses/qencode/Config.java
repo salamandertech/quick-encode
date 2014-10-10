@@ -7,6 +7,61 @@ import java.util.List;
 
 final class Config {
 
+    private static final int DEFAULT_SIZE = 512;
+    private static final int DEFAULT_VERBOSITY = 1;
+
+    static final Config parse(String[] args) {
+        final Config.Builder cb = new Config.Builder()
+            .setVerbosity(DEFAULT_VERBOSITY);
+
+        State state = State.NONE;
+        boolean noMoreArgs = false;
+        for (String a : args) {
+            if ("-h".equals(a) || "--height".equals(a)) {
+                state = State.HEIGHT;
+            } else if ("-q".equals(a) || "--quiet".equals(a)) {
+                cb.setVerbosity(0);
+                state = State.NONE;
+            } else if ("-v".equals(a) || "--verbosity".equals(a)) {
+                state = State.VERBOSITY;
+            } else if ("-w".equals(a) || "--width".equals(a)) {
+                state = State.WIDTH;
+            } else if (a.startsWith("-")) {
+                if (noMoreArgs) {
+                    cb.addPaths(a);
+                } else if ("--".equals(a)) {
+                    noMoreArgs = true;
+                }
+            } else {
+                switch (state) {
+                    case HEIGHT:
+                        cb.setHeight(Integer.parseInt(a));
+                        break;
+                    case VERBOSITY:
+                        cb.setVerbosity(Integer.parseInt(a));
+                        break;
+                    case WIDTH:
+                        cb.setWidth(Integer.parseInt(a));
+                        break;
+                    default:
+                        cb.addPaths(a);
+                        break;
+                }
+                state = State.NONE;
+            }
+        }
+
+        int height = cb.getHeight();
+
+        if (cb.getWidth() == -1)
+            cb.setWidth(height == -1 ? DEFAULT_SIZE : height);
+
+        if (height == -1)
+            cb.setHeight(cb.getWidth());
+
+        return cb.build();
+    }
+
     private final int height, verbosity, width;
     private final List<String> paths;
 
@@ -40,12 +95,19 @@ final class Config {
         return width;
     }
 
-    final static class Builder {
+    private final static class Builder {
 
         private int height, verbosity, width;
-        private final List<String> paths = new ArrayList<>();
+        private final List<String> paths;
 
-        public Builder addPaths(String first, String... more) {
+        Builder() {
+            this.height = -1;
+            this.paths = new ArrayList<>();
+            this.verbosity = -1;
+            this.width = -1;
+        }
+
+        Builder addPaths(String first, String... more) {
             if (first != null && !first.isEmpty())
                 paths.add(first);
             if (more != null) {
@@ -57,7 +119,7 @@ final class Config {
             return this;
         }
 
-        public Builder addPaths(Collection<String> paths) {
+        Builder addPaths(Collection<String> paths) {
             if (paths != null) {
                 for (String path : paths) {
                     if (path != null && !path.isEmpty())
@@ -67,43 +129,44 @@ final class Config {
             return this;
         }
 
-        public Config build() {
+        Config build() {
             return new Config(this);
         }
 
-        public int getHeight() {
+        int getHeight() {
             return height;
         }
 
-        public int getVerbosity() {
+        int getVerbosity() {
             return verbosity;
         }
 
-        public int getWidth() {
+        int getWidth() {
             return width;
         }
 
-        public Builder incrementVerbosity(int increment) {
-            final int v = verbosity + increment;
-            verbosity = v < 0 ? 0 : v;
-            return this;
-        }
-
-        public Builder setHeight(int height) {
+        Builder setHeight(int height) {
             this.height = height < 0 ? 0 : height;
             return this;
         }
 
-        public Builder setVerbosity(int verbosity) {
+        Builder setVerbosity(int verbosity) {
             this.verbosity = verbosity < 0 ? 0 : verbosity;
             return this;
         }
 
-        public Builder setWidth(int width) {
+        Builder setWidth(int width) {
             this.width = width < 0 ? 0 : width;
             return this;
         }
 
+    }
+
+    private static enum State {
+        NONE,
+        HEIGHT,
+        VERBOSITY,
+        WIDTH
     }
 
 }

@@ -15,57 +15,10 @@ import com.google.zxing.qrcode.QRCodeWriter;
 
 public final class Main {
 
-    private static final int DEFAULT_HEIGHT = 512;
-    private static final int DEFAULT_VERBOSITY = 1;
-    private static final int DEFAULT_WIDTH = 512;
     private static final String IMAGE_FORMAT = "png";
 
     public static void main(String[] args) {
-        System.exit(new Main(parseArgs(args)).run());
-    }
-
-    private static Config parseArgs(String[] args) {
-        final Config.Builder cb = new Config.Builder()
-            .setHeight(DEFAULT_HEIGHT)
-            .setVerbosity(DEFAULT_VERBOSITY)
-            .setWidth(DEFAULT_WIDTH);
-        State state = State.NONE;
-        boolean noMoreArgs = false;
-        for (String a : args) {
-            if ("-h".equals(a) || "--height".equals(a)) {
-                state = State.HEIGHT;
-            } else if ("-q".equals(a) || "--quiet".equals(a)) {
-                cb.setVerbosity(0);
-                state = State.NONE;
-            } else if ("-v".equals(a) || "--verbosity".equals(a)) {
-                state = State.VERBOSITY;
-            } else if ("-w".equals(a) || "--width".equals(a)) {
-                state = State.WIDTH;
-            } else if (a.startsWith("-")) {
-                if (noMoreArgs) {
-                    cb.addPaths(a);
-                } else if ("--".equals(a)) {
-                    noMoreArgs = true;
-                }
-            } else {
-                switch (state) {
-                    case HEIGHT:
-                        cb.setHeight(Integer.parseInt(a));
-                        break;
-                    case VERBOSITY:
-                        cb.setVerbosity(Integer.parseInt(a));
-                        break;
-                    case WIDTH:
-                        cb.setWidth(Integer.parseInt(a));
-                        break;
-                    default:
-                        cb.addPaths(a);
-                        break;
-                }
-                state = State.NONE;
-            }
-        }
-        return cb.build();
+        System.exit(new Main(Config.parse(args)).run());
     }
 
     private final Config config;
@@ -116,13 +69,6 @@ public final class Main {
         }
 
         return 0;
-    }
-
-    private static enum State {
-        NONE,
-        HEIGHT,
-        VERBOSITY,
-        WIDTH
     }
 
 }
