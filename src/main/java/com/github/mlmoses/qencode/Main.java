@@ -6,7 +6,6 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collection;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
@@ -55,8 +54,9 @@ public final class Main {
     }
 
     private static Config parseArgs(String[] args) {
-        Config c = new Config().setHeight(DEFAULT_HEIGHT).setWidth(DEFAULT_WIDTH);
-        Collection<String> paths = c.getPaths();
+        final Config.Builder cb = new Config.Builder()
+            .setHeight(DEFAULT_HEIGHT)
+            .setWidth(DEFAULT_WIDTH);
         State state = State.NONE;
         boolean noMoreArgs = false;
         for (String a : args) {
@@ -66,26 +66,26 @@ public final class Main {
                 state = State.WIDTH;
             } else if (a.startsWith("-")) {
                 if (noMoreArgs) {
-                    paths.add(a);
+                    cb.addPaths(a);
                 } else if ("--".equals(a)) {
                     noMoreArgs = true;
                 }
             } else {
                 switch (state) {
                     case HEIGHT:
-                        c.setHeight(Integer.parseInt(a));
+                        cb.setHeight(Integer.parseInt(a));
                         break;
                     case WIDTH:
-                        c.setWidth(Integer.parseInt(a));
+                        cb.setWidth(Integer.parseInt(a));
                         break;
                     default:
-                        paths.add(a);
+                        cb.addPaths(a);
                         break;
                 }
                 state = State.NONE;
             }
         }
-        return c;
+        return cb.build();
     }
 
     private Main() {}
