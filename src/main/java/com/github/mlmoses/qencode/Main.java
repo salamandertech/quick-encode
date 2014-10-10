@@ -31,7 +31,7 @@ public final class Main {
             Path pathOut = Paths.get(pathIn + ".png");
             byte[] contents;
             try {
-                contents = Files.readAllBytes(Paths.get(pathname));
+                contents = Files.readAllBytes(pathIn);
             } catch (IOException e) {
                 System.out.printf("Could not read \"%s\", skipping.\n", pathIn);
                 continue;
