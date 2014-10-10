@@ -7,11 +7,12 @@ import java.util.List;
 
 final class Config {
 
-    private final int height, width;
+    private final int height, verbosity, width;
     private final List<String> paths;
 
     private Config(Builder builder) {
         this.height = builder.height;
+        this.verbosity = builder.verbosity;
         this.width = builder.width;
 
         final int pathCount = builder.paths.size();
@@ -31,13 +32,17 @@ final class Config {
         return paths;
     }
 
+    public int getVerbosity() {
+        return verbosity;
+    }
+
     public int getWidth() {
         return width;
     }
 
     final static class Builder {
 
-        private int height, width;
+        private int height, verbosity, width;
         private final List<String> paths = new ArrayList<>();
 
         public Builder addPaths(String first, String... more) {
@@ -70,12 +75,27 @@ final class Config {
             return height;
         }
 
+        public int getVerbosity() {
+            return verbosity;
+        }
+
         public int getWidth() {
             return width;
         }
 
+        public Builder incrementVerbosity(int increment) {
+            final int v = verbosity + increment;
+            verbosity = v < 0 ? 0 : v;
+            return this;
+        }
+
         public Builder setHeight(int height) {
             this.height = height < 0 ? 0 : height;
+            return this;
+        }
+
+        public Builder setVerbosity(int verbosity) {
+            this.verbosity = verbosity < 0 ? 0 : verbosity;
             return this;
         }
 
