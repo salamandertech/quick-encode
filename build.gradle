@@ -3,7 +3,7 @@ apply plugin: 'application'
 
 mainClassName = 'com.github.mlmoses.qencode.Main'
 sourceCompatibility = 1.7
-version = '1.0.0'
+version = '0.1.0'
 
 repositories {
     mavenCentral()
