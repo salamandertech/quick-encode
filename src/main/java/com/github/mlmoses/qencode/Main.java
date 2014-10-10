@@ -17,6 +17,7 @@ public final class Main {
 
     private static final int DEFAULT_HEIGHT = 512;
     private static final int DEFAULT_WIDTH = 512;
+    private static final String IMAGE_FORMAT = "png";
 
     public static void main(String[] args) {
         // TODO: If no arguments are provided, read from stdin.
@@ -46,7 +47,7 @@ public final class Main {
             }
 
             try {
-                MatrixToImageWriter.writeToPath(m, "png", pathOut);
+                MatrixToImageWriter.writeToPath(m, IMAGE_FORMAT, pathOut);
             } catch (IOException e) {
                 System.out.printf("Could not write \"%s\".\n", pathOut);
             }
