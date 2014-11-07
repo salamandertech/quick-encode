@@ -6,6 +6,8 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Map;
+import java.util.TreeMap;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
@@ -18,7 +20,21 @@ public final class Main {
     private static final String IMAGE_FORMAT = "png";
 
     public static void main(String[] args) {
-        System.exit(new Main(Config.parse(args)).run());
+        final Config config = Config.parse(args);
+        if (config.getShowVersion())
+            showVersion();
+        else
+            System.exit(new Main(config).run());
+    }
+
+    public static void showVersion() {
+        Package pkg = Main.class.getPackage();
+        System.out.printf(
+                "%s (%s)\nVersion %s by %s\n",
+                pkg.getSpecificationTitle(),
+                pkg.getName(),
+                pkg.getSpecificationVersion(),
+                pkg.getSpecificationVendor());
     }
 
     private final Config config;

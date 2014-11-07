@@ -24,6 +24,9 @@ final class Config {
                 state = State.NONE;
             } else if ("-v".equals(a) || "--verbosity".equals(a)) {
                 state = State.VERBOSITY;
+            } else if ("-V".equals(a) || "--version".equals(a)) {
+                cb.setShowVersion(true);
+                state = State.NONE;
             } else if ("-w".equals(a) || "--width".equals(a)) {
                 state = State.WIDTH;
             } else if (a.startsWith("-")) {
@@ -63,10 +66,12 @@ final class Config {
     }
 
     private final int height, verbosity, width;
+    private final boolean showVersion;
     private final List<String> paths;
 
     private Config(Builder builder) {
         this.height = builder.height;
+        this.showVersion = builder.showVersion;
         this.verbosity = builder.verbosity;
         this.width = builder.width;
 
@@ -81,6 +86,10 @@ final class Config {
 
     public int getHeight() {
         return height;
+    }
+
+    public boolean getShowVersion() {
+        return showVersion;
     }
 
     public List<String> getPaths() {
@@ -98,6 +107,7 @@ final class Config {
     private final static class Builder {
 
         private int height, verbosity, width;
+        private boolean showVersion;
         private final List<String> paths;
 
         Builder() {
@@ -141,12 +151,21 @@ final class Config {
             return verbosity;
         }
 
+        boolean getShowVersion() {
+            return showVersion;
+        }
+
         int getWidth() {
             return width;
         }
 
         Builder setHeight(int height) {
             this.height = height < 0 ? 0 : height;
+            return this;
+        }
+
+        Builder setShowVersion(boolean showVersion) {
+            this.showVersion = showVersion;
             return this;
         }
 
