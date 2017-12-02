@@ -29,11 +29,13 @@ sub-directory to your path and you can run quick-encode from a command prompt.
 Running
 =======
 
-If you just want to run the application, you have two options. First, you can
-use the install task and execute the quick-encode script without copying the
-directory (see the previous section). Second, you can use the run task::
+If you just want to run the application without installing it, use the install
+task and execute the quick-encode script in place. Note that the run task
+cannot be used as it does not support command line arguments. Assuming the
+current directory is set the the repository's root::
 
-    $ ./gradlew run my_barcode_contents.txt
+    $ ./gradlew install
+    $ build/install/quick-encode/bin/quick-encode my-barcode-data.txt
 
 Any positional arguments provided to the utility are treated as names of files
 containing data to encode. Multiple files may be provided and they will all be
