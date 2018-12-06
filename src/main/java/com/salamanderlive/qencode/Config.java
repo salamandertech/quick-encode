@@ -1,4 +1,4 @@
-package org.bitbucket.mlmoses.qencode;
+package com.salamanderlive.qencode;
 
 import java.util.ArrayList;
 import java.util.Collections;

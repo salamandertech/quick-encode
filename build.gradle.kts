@@ -5,7 +5,7 @@ plugins {
 
 version = "0.1.0"
 
-val mainPackageName = "org.bitbucket.mlmoses.qencode"
+val mainPackageName = "com.salamanderlive.qencode"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_11
@@ -35,8 +35,7 @@ tasks.jar {
             "Class-Path" to configurations.runtimeClasspath.get().joinToString(" ") { it.name }
         ))
 
-        val vendor = "Matthew L. Moses"
-        val sectionName = "${mainPackageName.replace(".", "/")}/"
+        val vendor = "Salamander Technologies, LLC"
         attributes(
             mapOf(
                 "Sealed" to true,
@@ -47,7 +46,7 @@ tasks.jar {
                 "Implementation-Version" to project.version,
                 "Implementation-Vendor" to vendor
             ),
-            sectionName
+            "${mainPackageName.replace(".", "/")}/"
         )
     }
 }

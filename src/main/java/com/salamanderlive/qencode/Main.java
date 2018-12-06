@@ -1,4 +1,4 @@
-package org.bitbucket.mlmoses.qencode;
+package com.salamanderlive.qencode;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
