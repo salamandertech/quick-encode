@@ -1,22 +1,20 @@
 package org.bitbucket.mlmoses.qencode;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 final class Config {
-
     private static final int DEFAULT_SIZE = 512;
     private static final int DEFAULT_VERBOSITY = 1;
 
-    static final Config parse(String[] args) {
-        final Config.Builder cb = new Config.Builder()
-            .setVerbosity(DEFAULT_VERBOSITY);
+    static Config parse(String[] args) {
+        final var cb = new Config.Builder();
+        cb.setVerbosity(DEFAULT_VERBOSITY);
 
-        State state = State.NONE;
-        boolean noMoreArgs = false;
-        for (String a : args) {
+        var state = State.NONE;
+        var noMoreArgs = false;
+        for (var a : args) {
             if ("-h".equals(a) || "--height".equals(a)) {
                 state = State.HEIGHT;
             } else if ("-q".equals(a) || "--quiet".equals(a)) {
@@ -54,7 +52,7 @@ final class Config {
             }
         }
 
-        int height = cb.getHeight();
+        var height = cb.getHeight();
 
         if (cb.getWidth() == -1)
             cb.setWidth(height == -1 ? DEFAULT_SIZE : height);
@@ -75,7 +73,7 @@ final class Config {
         this.verbosity = builder.verbosity;
         this.width = builder.width;
 
-        final int pathCount = builder.paths.size();
+        final var pathCount = builder.paths.size();
         if (pathCount == 0)
             this.paths = Collections.emptyList();
         else if (pathCount == 1)
@@ -84,28 +82,27 @@ final class Config {
             this.paths = Collections.unmodifiableList(builder.paths);
     }
 
-    public int getHeight() {
+    int getHeight() {
         return height;
     }
 
-    public boolean getShowVersion() {
+    boolean getShowVersion() {
         return showVersion;
     }
 
-    public List<String> getPaths() {
+    List<String> getPaths() {
         return paths;
     }
 
-    public int getVerbosity() {
+    int getVerbosity() {
         return verbosity;
     }
 
-    public int getWidth() {
+    int getWidth() {
         return width;
     }
 
     private final static class Builder {
-
         private int height, verbosity, width;
         private boolean showVersion;
         private final List<String> paths;
@@ -117,7 +114,7 @@ final class Config {
             this.width = -1;
         }
 
-        Builder addPaths(String first, String... more) {
+        void addPaths(String first, String... more) {
             if (first != null && !first.isEmpty())
                 paths.add(first);
             if (more != null) {
@@ -126,17 +123,6 @@ final class Config {
                         paths.add(path);
                 }
             }
-            return this;
-        }
-
-        Builder addPaths(Collection<String> paths) {
-            if (paths != null) {
-                for (String path : paths) {
-                    if (path != null && !path.isEmpty())
-                        paths.add(path);
-                }
-            }
-            return this;
         }
 
         Config build() {
@@ -147,45 +133,31 @@ final class Config {
             return height;
         }
 
-        int getVerbosity() {
-            return verbosity;
-        }
-
-        boolean getShowVersion() {
-            return showVersion;
-        }
-
         int getWidth() {
             return width;
         }
 
-        Builder setHeight(int height) {
+        void setHeight(int height) {
             this.height = height < 0 ? 0 : height;
-            return this;
         }
 
-        Builder setShowVersion(boolean showVersion) {
+        void setShowVersion(boolean showVersion) {
             this.showVersion = showVersion;
-            return this;
         }
 
-        Builder setVerbosity(int verbosity) {
+        void setVerbosity(int verbosity) {
             this.verbosity = verbosity < 0 ? 0 : verbosity;
-            return this;
         }
 
-        Builder setWidth(int width) {
+        void setWidth(int width) {
             this.width = width < 0 ? 0 : width;
-            return this;
         }
-
     }
 
-    private static enum State {
+    private enum State {
         NONE,
         HEIGHT,
         VERBOSITY,
         WIDTH
     }
-
 }

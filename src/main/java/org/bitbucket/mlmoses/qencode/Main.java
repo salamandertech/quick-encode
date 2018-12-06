@@ -1,34 +1,30 @@
 package org.bitbucket.mlmoses.qencode;
 
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Map;
-import java.util.TreeMap;
-
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 
-public final class Main {
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
+public final class Main {
     private static final String IMAGE_FORMAT = "png";
 
     public static void main(String[] args) {
-        final Config config = Config.parse(args);
+        final var config = Config.parse(args);
         if (config.getShowVersion())
             showVersion();
         else
             System.exit(new Main(config).run());
     }
 
-    public static void showVersion() {
-        Package pkg = Main.class.getPackage();
+    private static void showVersion() {
+        final var pkg = Main.class.getPackage();
         System.out.printf(
                 "%s (%s)\nVersion %s by %s\n",
                 pkg.getSpecificationTitle(),
@@ -49,15 +45,14 @@ public final class Main {
     }
 
     private int run() {
-        final Charset charset = Charset.forName("ISO-8859-1");
-        final QRCodeWriter writer = new QRCodeWriter();
+        final var writer = new QRCodeWriter();
 
-        final int height = config.getHeight();
-        final int width = config.getWidth();
+        final var height = config.getHeight();
+        final var width = config.getWidth();
 
-        for (String pathname : config.getPaths()) {
-            Path pathIn = Paths.get(pathname);
-            Path pathOut = Paths.get(pathIn + ".png");
+        for (var pathname : config.getPaths()) {
+            var pathIn = Paths.get(pathname);
+            var pathOut = Paths.get(pathIn + ".png");
 
             printf("Encoding contents of %s to %s.\n", pathIn, pathOut);
 
@@ -68,7 +63,7 @@ public final class Main {
                 printf("Could not read \"%s\", skipping.\n", pathIn);
                 continue;
             }
-            String contentsStr = charset.decode(ByteBuffer.wrap(contents)).toString();
+            var contentsStr = StandardCharsets.ISO_8859_1.decode(ByteBuffer.wrap(contents)).toString();
             BitMatrix m;
             try {
                 m = writer.encode(contentsStr, BarcodeFormat.QR_CODE, width, height);
@@ -86,5 +81,4 @@ public final class Main {
 
         return 0;
     }
-
 }
