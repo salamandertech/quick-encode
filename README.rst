@@ -37,6 +37,11 @@ current directory is set the the repository's root::
     $ ./gradlew install
     $ build/install/quick-encode/bin/quick-encode my-barcode-data.txt
 
+The jar file is executable, so you can also execute it with java::
+
+    $ ./gradlew install
+    $ java -jar build/install/quick-encode/lib/quick-encode-0.1.0.jar my-barcode-data.txt
+
 Any positional arguments provided to the utility are treated as names of files
 containing data to encode. Multiple files may be provided and they will all be
 encoded to separate barcodes. Barcodes are output as PNGs where the file name
