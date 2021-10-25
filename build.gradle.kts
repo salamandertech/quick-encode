@@ -1,66 +1,45 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
-    java
-    application
-    kotlin("jvm") version "1.3.11"
-}
-
-version = "0.1.0"
-
-val mainPackageName = "com.salamanderlive.qencode"
-
-java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
-}
-
-application {
-    mainClassName = "$mainPackageName.AppKt"
+    id("org.beryx.jlink") version "2.24.4"
+    kotlin("jvm") version "1.5.31"
 }
 
 repositories {
-    jcenter()
+    mavenCentral()
 }
 
-dependencies {
-    implementation(kotlin("stdlib-jdk8"))
-    implementation("com.google.zxing:javase:3.3.3")
+// Note that there are no toolchains defined here. Specifying a toolchain
+// doesn't seme to work well on macos - at least not when you have an Apple
+// with their M1 chip. Specifying the toolchain may not be necessary though,
+// and I think we'll be OK with just using the Java version in which the build
+// script is executing.
+
+application {
+    mainModule.set("com.salamanderlive.qencode")
+    mainClass.set("com.salamanderlive.qencode.AppKt")
 }
 
-tasks.jar {
-    manifest {
-        attributes(mapOf(
-            "Main-Class" to application.mainClassName,
-            // Gradle's documentation says runtimeClasspath is an instance of Configuration, but it seems to actually
-            // be an instance of NamedDomainObjectProvider<Configuration>. The latter is marked as incubating, so I'm
-            // not sure what the mix-up is. Either way, the code below won't function without the get() to unwrap the
-            // actual Configuration object we need.
-            "Class-Path" to configurations.runtimeClasspath.get().joinToString(" ") { it.name }
-        ))
+println(System.getProperty("os.name"))
 
-        val vendor = "Salamander Technologies, LLC"
-        attributes(
-            mapOf(
-                "Sealed" to true,
-                "Specification-Title" to project.name,
-                "Specification-Version" to project.version,
-                "Specification-Vendor" to vendor,
-                "Implementation-Title" to mainPackageName,
-                "Implementation-Version" to project.version,
-                "Implementation-Vendor" to vendor
-            ),
-            "${mainPackageName.replace(".", "/")}/"
-        )
+jlink {
+    jpackage {
+        skipInstaller = true
+
+        // FIXME This is not the most robust way to check the OS
+        // Unfortunately, Gradle doesn't offer a built-in way to determine the
+        // OS on which the project is being built. The internet offers various
+        // solutions, but none of them are much better than this. There is one
+        // solution which uses part of Gradle's public Ant API, which may be
+        // worth exploring in the future.
+        if (System.getProperty("os.name").startsWith("Windows")) {
+            imageOptions.add("--win-console")
+        }
     }
 }
 
-val compileKotlin: KotlinCompile by tasks
-compileKotlin.kotlinOptions {
-    jvmTarget = "1.8"
+version = "1.0.0"
+
+dependencies {
+    implementation(kotlin("stdlib-jdk8"))
+    implementation("com.google.zxing:javase:3.4.1")
 }
 
-val compileTestKotlin: KotlinCompile by tasks
-compileTestKotlin.kotlinOptions {
-    jvmTarget = "1.8"
-}
