@@ -1,24 +1,22 @@
 plugins {
-    id("org.beryx.jlink") version "2.24.4"
-    kotlin("jvm") version "1.5.31"
+    id("org.beryx.jlink") version "2.25.0"
+    kotlin("jvm") version "1.7.10"
 }
 
 repositories {
     mavenCentral()
 }
 
-// Note that there are no toolchains defined here. Specifying a toolchain
-// doesn't seme to work well on macos - at least not when you have an Apple
-// with their M1 chip. Specifying the toolchain may not be necessary though,
-// and I think we'll be OK with just using the Java version in which the build
-// script is executing.
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
+    }
+}
 
 application {
     mainModule.set("com.salamanderlive.qencode")
     mainClass.set("com.salamanderlive.qencode.AppKt")
 }
-
-println(System.getProperty("os.name"))
 
 jlink {
     jpackage {
@@ -39,7 +37,6 @@ jlink {
 version = "1.0.0"
 
 dependencies {
-    implementation(kotlin("stdlib-jdk8"))
-    implementation("com.google.zxing:javase:3.4.1")
+    implementation("com.google.zxing:javase:3.5.0")
 }
 
